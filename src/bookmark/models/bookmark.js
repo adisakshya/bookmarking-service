@@ -50,7 +50,7 @@ const bookmarksSchema = new mongoose.Schema({
    */
   tags: {
     type: Array,
-    default: Date.now
+    default: []
   }
 });
 
