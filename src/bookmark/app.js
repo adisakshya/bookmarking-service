@@ -21,4 +21,10 @@ app.use('/api/v1/ping', pingRounter);
 const bookmarkRouter = require('./routes/bookmark');
 app.use('/api/v1/bookmark', bookmarkRouter);
 
+/**
+ * Tag Router
+ */
+const tagRouter = require('./routes/tag');
+app.use('/api/v1/tag', tagRouter);
+
 module.exports = app;
