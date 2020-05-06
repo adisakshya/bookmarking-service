@@ -11,17 +11,17 @@ const tagController = require('../controllers/tag/controller');
  */
 router.route('/')
   /**
-   * GET all items
+   * GET all tags
    */
   .get(tagController.getAllItems)
   
   /**
-   * POST new item 
+   * POST new tag 
    */
   .post(tagController.createNewItem)
 
   /**
-   * DELETE all items
+   * DELETE all tags
    */
   .delete(tagController.deleteAll);
 
@@ -30,12 +30,12 @@ router.route('/')
  */
 router.route('/item')
   /**
-   * GET item by ID
+   * GET tag by ID
    */
   .get(tagController.getByID)
 
   /**
-   * DELETE item by ID
+   * DELETE tag by ID
    */
   .delete(tagController.deleteByID);
 

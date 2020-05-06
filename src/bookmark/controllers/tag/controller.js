@@ -1,24 +1,18 @@
 /**
- * Application Controller
- * Management of Bookmarks
+ * Tag Controller
  */
-
-/**
- * UUID
- */
-const uuid = require('uuid').v4;
-
-/**
- * Valid URL
- */
-const validURL = require('valid-url');
 
 /**
  * Require Database Controller
  */
 const dbController = require('../../lib/tagInterface');
 
-const createNewItem = async (req, res) => {
+/**
+ * CREATE new tag
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _createNewItem = async (req, res) => {
 
     // Get title
     const { title } = req.body;
@@ -26,92 +20,99 @@ const createNewItem = async (req, res) => {
     // Check if all parameters are given
     if(!(title)) {
         return res
-        .status(400)
-        .json({
-            "success": false,
-            "error": true,
-            "message": "Insufficient parameters",
-            "data": null
-        })
+          .status(400)
+          .json({
+              "success": false,
+              "error": true,
+              "message": "Insufficient parameters",
+              "data": null
+          });
     }
 
     // Check if item with this Title already exists
     const item = await dbController.getItemByTitle(title);
     if(item) {
-        // Return response
         return res
-        .status(200)
-        .json({
-            "success": true,
-            "error": false,
-            "message": "Title already exists",
-            "data": {
-              "tag": item,
-              "duplicate": "Tag Title"
-            }
-        });
+          .status(200)
+          .json({
+              "success": true,
+              "error": false,
+              "message": "Tag already exists",
+              "data": {
+                "tag": item,
+                "duplicate": "Tag Title"
+              }
+          });
     } else {
         // Insert into db
         const item = await dbController.insertNewItem(title);
 
         if(item) {
-        // Return response
         return res
             .status(200)
             .json({
-            "success": true,
-            "error": false,
-            "message": "New tag entry created",
-            "data": {
-                "tag": item,
-            }
-            })
+                "success": true,
+                "error": false,
+                "message": "New tag entry created",
+                "data": {
+                    "tag": item,
+                }
+            });
         } else {
-        return res
-            .status(500)
-            .json({
-            "success": false,
-            "error": true,
-            'message': 'Something went wrong',
-            "data": null
-            })
-        }
+          return res
+              .status(500)
+              .json({
+                  "success": false,
+                  "error": true,
+                  'message': 'Something went wrong',
+                  "data": null
+              });
+          }
     }
 
 };
 
-const getAllItems = async (req, res) => {
+/**
+ * CREATE all tags
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _getAllItems = async (req, res) => {
   
-  // Get items
+  // Get all tags
   const items = await dbController.getItems();
 
-  // Return response
   if(items.length) {
     return res
       .status(200)
       .json({
-        "success": true,
-        "error": false,
-        'message': "Items found",
-        "data": {
-          "items": items
-        }
+          "success": true,
+          "error": false,
+          'message': "Tags found",
+          "data": {
+            "items": items
+          }
       });
   } else {
     return res
       .status(404)
       .json({
-        "success": false,
-        "error": true,
-        "message": 'No Items found',
-        "data": null
+          "success": false,
+          "error": true,
+          "message": 'No tags found',
+          "data": null
       });
   }
 };
 
-const getByID = async (req, res) => {
+/**
+ * GET tag by ID
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _getByID = async (req, res) => {
   
-  // Get params
+  // Get id
   const id = req.query.id;
 
   // Check if all parameters are given
@@ -119,43 +120,47 @@ const getByID = async (req, res) => {
     return res
       .status(400)
       .json({
-        "success": false,
-        "error": true,
-        'message': 'Insufficient parameters',
-        "data": null
-      })
+          "success": false,
+          "error": true,
+          'message': 'Insufficient parameters',
+          "data": null
+      });
   }
 
-  // Get item
+  // Get item by ID
   const item = await dbController.getItemByID(id);
   
-  // Return response
   if(item) {
     return res
       .status(200)
       .json({
-        "success": true,
-        "error": false,
-        'message': "tag ID found",
-        "data": {
-          "tag": item
-        }
+          "success": true,
+          "error": false,
+          'message': "Tag found",
+          "data": {
+            "tag": item
+          }
       });
   } else {
     return res
       .status(404)
       .json({
-        "success": false,
-        "error": true,
-        "message": "No such tag ID found",
-        "data": null
-      })
+          "success": false,
+          "error": true,
+          "message": "No such tag found",
+          "data": null
+      });
   }
 };
 
-const deleteByID = async (req, res) => {
+/**
+ * DELETE tag by ID
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _deleteByID = async (req, res) => {
   
-  // Get ID
+  // Get id
   const { id } = req.body;
 
   // Check if all parameters are given
@@ -163,47 +168,63 @@ const deleteByID = async (req, res) => {
     return res
       .status(400)
       .json({
-        "success": false,
-        "error": true,
-        "message": "Insufficient parameters",
-        "data": null
-      })
+          "success": false,
+          "error": true,
+          "message": "Insufficient parameters",
+          "data": null
+      });
   }
 
-  // Get url code
+  // Get item by ID
+  // To check if item exists
   const item = await dbController.getItemByID(id);
   let itemID = item._id;
 
-  // Delete item
-  const removedItem = await dbController.deleteItemByID(itemID);
-  
-  if(removedItem) {    
-    // Return response
-    return res
-      .status(200)
-      .json({
-        "success": true,
-        "error": false,
-        'message': "tag deleted",
-        "data": {
-          "tag": item
-        }
-      });
+  if(itemID) {
+    // Delete item
+    const removedItem = await dbController.deleteItemByID(itemID);
+    
+    if(removedItem) {   
+      return res
+        .status(200)
+        .json({
+            "success": true,
+            "error": false,
+            'message': "tag deleted",
+            "data": {
+              "tag": item
+            }
+        });
+    } else {
+        return res
+          .status(404)
+          .json({
+              "success": false,
+              "error": true,
+              "message": "Something went wrong",
+              "data": null
+          });
+    }
   } else {
     return res
       .status(404)
       .json({
-        "success": false,
-        "error": true,
-        "message": "No such tag found",
-        "data": null
+          "success": false,
+          "error": true,
+          "message": "No such tag found",
+          "data": null
       });
   }
 };
 
-const deleteAll = async (req, res) => {
+/**
+ * DELETE all tags
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _deleteAll = async (req, res) => {
   
-  // Get item
+  // Delete all tags
   const resp = await dbController.deleteAllItems();
   
   // Check if no items were present
@@ -211,39 +232,38 @@ const deleteAll = async (req, res) => {
     return res
       .status(404)
       .json({
-        "success": false,
-        "error": true,
-        "message": "No Items found",
-        "data": null
+          "success": false,
+          "error": true,
+          "message": "No tags found",
+          "data": null
       });
   }
 
   if(resp) {    
-    // Return response
     return res
       .status(200)
       .json({
-        "success": true,
-        "error": false,
-        'message': "tag deleted",
-        "data": {
-          "tag": resp
-        }
+          "success": true,
+          "error": false,
+          'message': "Tags deleted",
+          "data": {
+            "tag": resp
+          }
       });
   } else {
     return res
       .status(500)
       .json({
-        "success": false,
-        "error": true,
-        "message": "Something went wrong",
-        "data": null
+          "success": false,
+          "error": true,
+          "message": "Something went wrong",
+          "data": null
       });
   }
 };
 
-exports.createNewItem = createNewItem;
-exports.getAllItems = getAllItems;
-exports.getByID = getByID;
-exports.deleteByID = deleteByID;
-exports.deleteAll = deleteAll;
+exports.createNewItem = _createNewItem;
+exports.getAllItems = _getAllItems;
+exports.getByID = _getByID;
+exports.deleteByID = _deleteByID;
+exports.deleteAll = _deleteAll;

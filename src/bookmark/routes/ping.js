@@ -4,13 +4,22 @@ const router = express.Router();
 /**
  * Import controller
  */
-const controller = require('../controllers/ping/controller');
+const pingController = require('../controllers/ping/controller');
 
 /**
  * Ping Route
  */
 router.route('/')
-  .get(controller.ping)
-  .post(controller.ping);
+  .get(pingController.ping)
+  .post(pingController.ping);
+
+/**
+ * Database Connection Test Route
+ */
+router.route('/db')
+  /**
+   * CHECK connection with database
+   */
+  .get(pingController.checkDBConnection);
 
 module.exports = router;

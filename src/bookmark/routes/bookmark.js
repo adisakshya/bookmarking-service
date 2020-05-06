@@ -11,17 +11,17 @@ const bookmarkController = require('../controllers/bookmark/controller');
  */
 router.route('/')
   /**
-   * GET all items
+   * GET all bookmarks
    */
   .get(bookmarkController.getAllItems)
   
   /**
-   * POST new item 
+   * POST new bookmark 
    */
   .post(bookmarkController.createNewItem)
 
   /**
-   * DELETE all items
+   * DELETE all bookmarks
    */
   .delete(bookmarkController.deleteAll);
 
@@ -30,12 +30,12 @@ router.route('/')
  */
 router.route('/item')
   /**
-   * GET item by ID
+   * GET bookmark by ID
    */
   .get(bookmarkController.getByID)
 
   /**
-   * DELETE item by ID
+   * DELETE bookmark by ID
    */
   .delete(bookmarkController.deleteByID);
 
@@ -44,22 +44,13 @@ router.route('/item')
  */
 router.route('/tag/add')
   /**
-   * Add tag
+   * Add tag to bookmark
    */
   .post(bookmarkController.addTag)
   
   /**
-   * Remove tag
+   * Remove tag from bookmark
    */
   .delete(bookmarkController.removeTag);
-
-/**
- * Database Connection Test Route
- */
-router.route('/db/connection/test')
-  /**
-   * CHECK connection with database
-   */
-  .get(bookmarkController.checkDBConnection);
 
 module.exports = router;

@@ -1,6 +1,5 @@
 /**
- * Database Controller
- * Interaction with database
+ * Interface - Bookmark Schema
  */
 
 /**
@@ -9,21 +8,10 @@
 let bookmarks = require('../models/bookmark');
 
 /**
- * Check if connection with database if established
- */
-const checkDB = async() => {
-  // Load database connection test
-  const dbTest = require('../db/db').connectionTest;
-
-  // RETURN connection test result
-  return dbTest();
-};
-
-/**
  * GET item by ID
  * @param {String} id 
  */
-const getItemByID = async (id) => {
+const _getItemByID = async (id) => {
   
   try {
     // GET item
@@ -45,7 +33,7 @@ const getItemByID = async (id) => {
  * GET item by link
  * @param {String} link 
  */
-const getItemByLink = async (link) => {
+const _getItemByLink = async (link) => {
   
   try {
     // GET item
@@ -69,7 +57,7 @@ const getItemByLink = async (link) => {
  * GET item by title
  * @param {String} link 
  */
-const getItemByTitle = async (title) => {
+const _getItemByTitle = async (title) => {
   
   try {
     // GET item
@@ -96,7 +84,7 @@ const getItemByTitle = async (title) => {
  * @param {String} publisher
  * @param {String} tags
  */
-const insertNewItem = async (link, title, publisher, tags) => {
+const _insertNewItem = async (link, title, publisher, tags) => {
     
   try {
     // Create new item
@@ -122,7 +110,7 @@ const insertNewItem = async (link, title, publisher, tags) => {
  * DELETE item 
  * @param {String} id 
  */
-const deleteItemByID = async (id) => {
+const _deleteItemByID = async (id) => {
     
   try {
     // Get item by ID
@@ -144,7 +132,7 @@ const deleteItemByID = async (id) => {
 /**
  * DELETE all items
  */
-const deleteAllItems = async () => {
+const _deleteAllItems = async () => {
     
   try {
     // Get item by ID
@@ -165,7 +153,7 @@ const deleteAllItems = async () => {
 /**
  * GET all item 
  */
-const getItems = async () => {
+const _getItems = async () => {
     
   try {
     // Get all items
@@ -187,7 +175,7 @@ const getItems = async () => {
  * UPDATE item's original URL
  * @param {String} originalURL 
  */
-const updateItem = async (id, updatedItem) => {
+const _updateItem = async (id, updatedItem) => {
   
   try {
     // UPDATE item
@@ -205,12 +193,11 @@ const updateItem = async (id, updatedItem) => {
   
 };
 
-exports.checkDB = checkDB;
-exports.getItemByID = getItemByID;
-exports.insertNewItem = insertNewItem;
-exports.deleteItemByID = deleteItemByID;
-exports.deleteAllItems = deleteAllItems;
-exports.getItems = getItems;
-exports.getItemByLink = getItemByLink;
-exports.getItemByTitle = getItemByTitle;
-exports.updateItem = updateItem;
+exports.getItemByID = _getItemByID;
+exports.insertNewItem = _insertNewItem;
+exports.deleteItemByID = _deleteItemByID;
+exports.deleteAllItems = _deleteAllItems;
+exports.getItems = _getItems;
+exports.getItemByLink = _getItemByLink;
+exports.getItemByTitle = _getItemByTitle;
+exports.updateItem = _updateItem;

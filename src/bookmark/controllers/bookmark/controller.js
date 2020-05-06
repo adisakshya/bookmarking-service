@@ -1,12 +1,6 @@
 /**
- * Application Controller
- * Management of Bookmarks
+ * Bookmark Controller
  */
-
-/**
- * UUID
- */
-const uuid = require('uuid').v4;
 
 /**
  * Valid URL
@@ -17,9 +11,11 @@ const validURL = require('valid-url');
  * Require Database Controller
  */
 const dbController = require('../../lib/dbInterface');
+const tagController = require('../../lib/tagInterface');
 
 /**
  * Utility function
+ * Find and remove item from an array
  */
 function removeItemFromArray(arr, value) { 
   var index = arr.indexOf(value);
@@ -29,60 +25,34 @@ function removeItemFromArray(arr, value) {
   return arr;
 }
 
-const checkDBConnection = async (req, res) => {
-
-  // CHECK if connection is established
-  if(await dbController.checkDB() !== 1) {
-    // if not then return Status 504
-    return res
-      .status(504)
-      .json({
-        "success": false,
-        "error": true,
-        "message": "Failed to establish connection with database",
-        "data": null
-      });
-  } else {
-    // if yes then return Status 200 OK
-    return res
-      .status(200)
-      .json({
-        "success": true,
-        "error": false,
-        "message": "Connection with database is successfully established",
-        "data": null
-      });
-  }
-}
-
-const createNewItem = async (req, res) => {
+/**
+ * CREATE new bookmark
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _createNewItem = async (req, res) => {
 
     // Get link, title, publisher, tags
     const { link, title, publisher } = req.body;
 
     // Check if all parameters are given
     if(!(link && title && publisher)) {
-        return res
+      return res
         .status(400)
         .json({
             "success": false,
             "error": true,
             "message": "Insufficient parameters",
             "data": null
-        })
+        });
     }
 
-    let tags = req.body.tags;
-    if(!tags) {
-      tags = [];
-    } else {
-      // create array object
-      tags = tags.split(',');  
-    }
+    // Define empty bookmark tags list
+    let tags = [];
 
     // Check if valid link
     if(!validURL.isUri(link)) {
-        return res
+      return res
         .status(400)
         .json({
             "success": false,
@@ -95,8 +65,7 @@ const createNewItem = async (req, res) => {
     // Check if bookmark link already exists
     const bookmarklink = await dbController.getItemByLink(link);
     if(bookmarklink) {
-        // Return response
-        return res
+      return res
         .status(200)
         .json({
             "success": true,
@@ -104,7 +73,7 @@ const createNewItem = async (req, res) => {
             "message": "Bookmark link already exists",
             "data": {
               "link": bookmarklink,
-              "duplicate": "Bookmark Link"
+              "duplicate": "Link"
             }
         });
     }
@@ -112,80 +81,85 @@ const createNewItem = async (req, res) => {
     // Check if item with this title already exists
     const item = await dbController.getItemByTitle(title);
     if(item) {
-        // Return response
-        return res
+      return res
         .status(200)
         .json({
             "success": true,
             "error": false,
-            "message": "Title already exists",
+            "message": "Bookmark title already exists",
             "data": {
               "bookmark": item,
-              "duplicate": "Bookmark Title"
+              "duplicate": "Title"
             }
         });
     } else {
         // Insert into db
         const item = await dbController.insertNewItem(link, title, publisher, tags);
-
         if(item) {
-        // Return response
-        return res
+          return res
             .status(200)
             .json({
-            "success": true,
-            "error": false,
-            "message": "New bookmark entry created",
-            "data": {
-                "bookmark": item,
-            }
-            })
+                "success": true,
+                "error": false,
+                "message": "New bookmark entry created",
+                "data": {
+                    "bookmark": item,
+                }
+            });
         } else {
-        return res
-            .status(500)
-            .json({
-            "success": false,
-            "error": true,
-            'message': 'Something went wrong',
-            "data": null
-            })
-        }
+          return res
+              .status(500)
+              .json({
+                  "success": false,
+                  "error": true,
+                  'message': 'Something went wrong',
+                  "data": null
+              });
+          }
     }
-
 };
 
-const getAllItems = async (req, res) => {
+/**
+ * GET all bookmarks
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _getAllItems = async (req, res) => {
   
-  // Get items
+  // Get all bookmarks
   const items = await dbController.getItems();
 
-  // Return response
   if(items.length) {
     return res
       .status(200)
       .json({
-        "success": true,
-        "error": false,
-        'message': "Items found",
-        "data": {
-          "items": items
-        }
+          "success": true,
+          "error": false,
+          'message': "bookmarks found",
+          "data": {
+            "bookmarks": items
+          }
       });
   } else {
     return res
       .status(404)
       .json({
-        "success": false,
-        "error": true,
-        "message": 'No Items found',
-        "data": null
+          "success": false,
+          "error": true,
+          "message": 'No bookmarks found',
+          "data": null
       });
   }
 };
 
-const getByID = async (req, res) => {
+/**
+ * GET bookmark by ID
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _getByID = async (req, res) => {
   
-  // Get params
+  // Get id
   const id = req.query.id;
 
   // Check if all parameters are given
@@ -193,43 +167,47 @@ const getByID = async (req, res) => {
     return res
       .status(400)
       .json({
-        "success": false,
-        "error": true,
-        'message': 'Insufficient parameters',
-        "data": null
-      })
+          "success": false,
+          "error": true,
+          'message': 'Insufficient parameters',
+          "data": null
+      });
   }
 
-  // Get item
+  // Get item by id
   const item = await dbController.getItemByID(id);
   
-  // Return response
   if(item) {
     return res
       .status(200)
       .json({
-        "success": true,
-        "error": false,
-        'message': "Bookmark ID found",
-        "data": {
-          "bookmark": item
-        }
+          "success": true,
+          "error": false,
+          'message': "Bookmark found",
+          "data": {
+            "bookmark": item
+          }
       });
   } else {
     return res
       .status(404)
       .json({
-        "success": false,
-        "error": true,
-        "message": "No such Bookmark ID found",
-        "data": null
-      })
+          "success": false,
+          "error": true,
+          "message": "No such bookmark found",
+          "data": null
+      });
   }
 };
 
-const deleteByID = async (req, res) => {
+/**
+ * DELETE bookmark by ID
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _deleteByID = async (req, res) => {
   
-  // Get ID
+  // Get id
   const { id } = req.body;
 
   // Check if all parameters are given
@@ -241,43 +219,58 @@ const deleteByID = async (req, res) => {
         "error": true,
         "message": "Insufficient parameters",
         "data": null
-      })
+      });
   }
 
-  // Get url code
+  // Get item by id
+  // To check if item exists
   const item = await dbController.getItemByID(id);
   let itemID = item._id;
-
-  // Delete item
-  const removedItem = await dbController.deleteItemByID(itemID);
-  
-  if(removedItem) {    
-    // Return response
-    return res
-      .status(200)
-      .json({
-        "success": true,
-        "error": false,
-        'message': "Bookmark deleted",
-        "data": {
-          "bookmark": item
-        }
-      });
+  if(itemID) {
+    // Delete item
+    const removedItem = await dbController.deleteItemByID(itemID);
+    
+    if(removedItem) {   
+      return res
+        .status(200)
+        .json({
+            "success": true,
+            "error": false,
+            'message': "Bookmark deleted",
+            "data": {
+              "bookmark": removedItem
+            }
+        });
+    } else {
+      return res
+        .status(404)
+        .json({
+            "success": false,
+            "error": true,
+            "message": "Something went wrong",
+            "data": null
+        });
+    }
   } else {
-    return res
-      .status(404)
-      .json({
-        "success": false,
-        "error": true,
-        "message": "No such Bookmark found",
-        "data": null
-      });
+      return res
+        .status(404)
+        .json({
+            "success": false,
+            "error": true,
+            "message": "No such Bookmark found",
+            "data": null
+        });
   }
 };
 
-const deleteAll = async (req, res) => {
+/**
+ * DELETE all bookmarks
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _deleteAll = async (req, res) => {
   
-  // Get item
+  // Delete all bookmarks
   const resp = await dbController.deleteAllItems();
   
   // Check if no items were present
@@ -287,89 +280,121 @@ const deleteAll = async (req, res) => {
       .json({
         "success": false,
         "error": true,
-        "message": "No Items found",
+        "message": "No bookmarks found",
         "data": null
       });
   }
 
-  if(resp) {    
-    // Return response
+  if(resp) {
     return res
       .status(200)
       .json({
-        "success": true,
-        "error": false,
-        'message': "Bookmarks deleted",
-        "data": {
-          "bookmark": resp
-        }
+          "success": true,
+          "error": false,
+          'message': "Bookmarks deleted",
+          "data": {
+            "bookmark": resp
+          }
       });
   } else {
     return res
       .status(500)
       .json({
-        "success": false,
-        "error": true,
-        "message": "Something went wrong",
-        "data": null
+          "success": false,
+          "error": true,
+          "message": "Something went wrong",
+          "data": null
       });
   }
 };
 
-const addTag = async (req, res) => {
+/**
+ * ADD tag to bookmark by ID
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _addTag = async (req, res) => {
   
-  const { id, tagTitle } = req.body;
+  // Get id, title
+  const { id, title } = req.body;
 
   // Check if all parameters are given
-  if(!(id && tagTitle)) {
+  if(!(id && title)) {
     return res
       .status(400)
       .json({
-        "success": false,
-        "error": true,
-        "message": "Insufficient parameters",
-        "data": null
-      })
+          "success": false,
+          "error": true,
+          "message": "Insufficient parameters",
+          "data": null
+      });
   }
 
-  // Get item
+  // Check if tag exists
+  const tag = await tagController.getItemByTitle(title);
+  if(!tag) {
+    return res
+      .status(404)
+      .json({
+          "success": false,
+          "error": true,
+          'message': "Tag not found",
+          "data": null
+      });
+  }
+
+  // Get item by id
   const item = await dbController.getItemByID(id);
   
   // Return response
   if(item) {
-    // Add tag
+    // Get tags
     let tags = item.tags;
-    await tags.push(tagTitle);
-    console.log(tags)
-    // Update item
-    const updatedItem = await dbController.updateItem(id, {
-      'tags': tags
-    });
-    console.log(updatedItem)
-    if(updatedItem) {
-      // Return response
-      return res
-        .status(200)
-        .json({
-          "success": true,
-          "error": false,
-          'message': "bookmark updated",
-          "data": {
-            "bookmark": updatedItem
-          }
-        });
+
+    // Check if tag already assigned
+    if(!(title in tags)) {
+      // If not then update tags
+      await tags.push(title);
+
+      // Update item
+      const updatedItem = await dbController.updateItem(id, {
+        'tags': tags
+      });
+      
+      if(updatedItem) {
+        return res
+          .status(200)
+          .json({
+              "success": true,
+              "error": false,
+              'message': "Bookmark updated",
+              "data": {
+                "bookmark": updatedItem
+              }
+          });
+      } else {
+        return res
+          .status(500)
+          .json({
+              "success": false,
+              "error": true,
+              'message': "Something went wrong",
+              "data": {
+                "bookmark": item
+              }
+          });
+      }
     } else {
-      // Return response
-      return res
-        .status(500)
-        .json({
-          "success": false,
-          "error": true,
-          'message': "something went wrong",
-          "data": {
-            "bookmark": item
-          }
-        });
+        return res
+          .status(200)
+          .json({
+            "success": true,
+            "error": false,
+            'message': "Tag already assigned",
+            "data": {
+              "bookmark": item
+            }
+          });
     }
   } else {
     return res
@@ -377,18 +402,24 @@ const addTag = async (req, res) => {
       .json({
         "success": false,
         "error": true,
-        "message": "No such Bookmark ID found",
+        "message": "No such bookmark found",
         "data": null
       })
   }
 };
 
-const removeTag = async (req, res) => {
+/**
+ * REMOVE tag from bookmark by ID
+ * @param {object} req 
+ * @param {object} res 
+ */
+const _removeTag = async (req, res) => {
   
-  const { id, tagTitle } = req.body;
+  // Get id, title
+  const { id, title } = req.body;
 
   // Check if all parameters are given
-  if(!(id && tagTitle)) {
+  if(!(id && title)) {
     return res
       .status(400)
       .json({
@@ -399,43 +430,58 @@ const removeTag = async (req, res) => {
       })
   }
 
-  // Get item
+  // Get item by ID
+  // To check if item exists
   const item = await dbController.getItemByID(id);
   
-  // Return response
   if(item) {
-    // Add tag
+    // Get tag
     let tags = item.tags;
-    tags = removeItemFromArray(tags, tagTitle);
     
-    // Update item
-    const updatedItem = await dbController.updateItem(id, {
-      'tags': tags
-    });
-    if(updatedItem) {
-      // Return response
-      return res
-        .status(200)
-        .json({
-          "success": true,
-          "error": false,
-          'message': "bookmark updated",
-          "data": {
-            "bookmark": item
-          }
-        });
+    // Check if tag is assigned
+    if(title in tags) {
+      // If yes, then remove the assigned tag
+      tags = removeItemFromArray(tags, title);
+    
+      // Update item
+      const updatedItem = await dbController.updateItem(id, {
+        'tags': tags
+      });
+
+      if(updatedItem) {
+        return res
+          .status(200)
+          .json({
+            "success": true,
+            "error": false,
+            'message': "Bookmark updated",
+            "data": {
+              "bookmark": item
+            }
+          });
+      } else {
+        return res
+          .status(500)
+          .json({
+            "success": false,
+            "error": true,
+            'message': "Something went wrong",
+            "data": {
+              "bookmark": item
+            }
+          });
+      }
     } else {
-      // Return response
-      return res
-        .status(500)
-        .json({
-          "success": false,
-          "error": true,
-          'message': "something went wrong",
-          "data": {
-            "bookmark": item
-          }
-        });
+        return res
+          .status(500)
+          .json({
+            "success": false,
+            "error": true,
+            'message': "This tag is not assigend to this bookmark",
+            "data": {
+              "bookmark": item
+            }
+          });
     }
   } else {
     return res
@@ -443,17 +489,16 @@ const removeTag = async (req, res) => {
       .json({
         "success": false,
         "error": true,
-        "message": "No such Bookmark ID found",
+        "message": "No such bookmark found",
         "data": null
       })
   }
 };
 
-exports.checkDBConnection = checkDBConnection;
-exports.createNewItem = createNewItem;
-exports.getAllItems = getAllItems;
-exports.getByID = getByID;
-exports.deleteByID = deleteByID;
-exports.deleteAll = deleteAll;
-exports.addTag = addTag;
-exports.removeTag = removeTag;
+exports.createNewItem = _createNewItem;
+exports.getAllItems = _getAllItems;
+exports.getByID = _getByID;
+exports.deleteByID = _deleteByID;
+exports.deleteAll = _deleteAll;
+exports.addTag = _addTag;
+exports.removeTag = _removeTag;

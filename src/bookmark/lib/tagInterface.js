@@ -1,6 +1,5 @@
 /**
- * Database Controller
- * Interaction with database
+ * Interface - Tag Schema
  */
 
 /**
@@ -12,7 +11,7 @@ let tags = require('../models/tag');
  * GET item by ID
  * @param {String} id 
  */
-const getItemByID = async (id) => {
+const _getItemByID = async (id) => {
   
   try {
     // GET item
@@ -34,7 +33,7 @@ const getItemByID = async (id) => {
  * GET item by title
  * @param {String} link 
  */
-const getItemByTitle = async (title) => {
+const _getItemByTitle = async (title) => {
   
   try {
     // GET item
@@ -58,7 +57,7 @@ const getItemByTitle = async (title) => {
  * INSERT new item
  * @param {String} title
  */
-const insertNewItem = async (title) => {
+const _insertNewItem = async (title) => {
     
   try {
     // Create new item
@@ -81,7 +80,7 @@ const insertNewItem = async (title) => {
  * DELETE item 
  * @param {String} id 
  */
-const deleteItemByID = async (id) => {
+const _deleteItemByID = async (id) => {
     
   try {
     // Get item by ID
@@ -103,7 +102,7 @@ const deleteItemByID = async (id) => {
 /**
  * DELETE all items
  */
-const deleteAllItems = async () => {
+const _deleteAllItems = async () => {
     
   try {
     // Get item by ID
@@ -124,7 +123,7 @@ const deleteAllItems = async () => {
 /**
  * GET all item 
  */
-const getItems = async () => {
+const _getItems = async () => {
     
   try {
     // Get all items
@@ -142,9 +141,9 @@ const getItems = async () => {
   
 };
 
-exports.getItemByID = getItemByID;
-exports.insertNewItem = insertNewItem;
-exports.deleteItemByID = deleteItemByID;
-exports.deleteAllItems = deleteAllItems;
-exports.getItems = getItems;
-exports.getItemByTitle = getItemByTitle;
+exports.getItemByID = _getItemByID;
+exports.insertNewItem = _insertNewItem;
+exports.deleteItemByID = _deleteItemByID;
+exports.deleteAllItems = _deleteAllItems;
+exports.getItems = _getItems;
+exports.getItemByTitle = _getItemByTitle;
