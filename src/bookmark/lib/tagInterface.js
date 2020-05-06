@@ -19,38 +19,29 @@ const _getItemByID = async (id) => {
     
     // RETURN item
     if(item) {
-      return item;
+      return {
+        error: false,
+        data: item,
+        message: "Tag found"
+      };
     } else {
-      return false;
+      return {
+        error: false,
+        data: null,
+        message: "No such tag found"
+      };
     }
   } catch(err) {
-    return false;
-  }
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
+  };
   
-};
-
-/**
- * GET item by title
- * @param {String} link 
- */
-const _getItemByTitle = async (title) => {
-  
-  try {
-    // GET item
-    const item = await tags.findOne({
-      title: title
-    });
-    
-    // RETURN item
-    if(item) {
-      return item;
-    } else {
-      return false;
-    }
-  } catch(err) {
-    return false;
-  }
-
 };
 
 /**
@@ -69,9 +60,20 @@ const _insertNewItem = async (title) => {
     await item.save();
 
     // Return item
-    return item;
+    return {
+      error: false,
+      data: item,
+      message: "New tag created"
+    };
   } catch(err) {
-    return false;
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
   }
     
 };
@@ -89,13 +91,28 @@ const _deleteItemByID = async (id) => {
     // Delete and return item
     if(item) {
       let removed_item = await item.remove();
-      return removed_item;
+      return {
+        error: false,
+        data: removed_item,
+        message: "Tag deleted"
+      };
     } else {
-      return false;
+      return {
+        error: false,
+        data: null,
+        message: "No such tag found"
+      };
     }
   } catch(err) {
-    return false;
-  }
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
+  };
   
 };
 
@@ -110,14 +127,29 @@ const _deleteAllItems = async () => {
 
     // Delete and return item
     if(flag) {
-      return flag;
+      return  {
+        error: false,
+        data: flag,
+        message: "Tags deleted"
+      };
     } else {
-      return false;
+      return  {
+        error: false,
+        data: null,
+        message: "No tags found"
+      };
     }
   } catch(err) {
-    return false;
-  }
-  
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
+  };
+
 };
 
 /**
@@ -131,14 +163,29 @@ const _getItems = async () => {
 
     // Return items
     if(items) {
-      return items;
+      return {
+        error: false,
+        data: items,
+        message: "Tags found"
+      };
     } else {
-      return false;
+      return {
+        error: false,
+        data: null,
+        message: "No tags found"
+      };
     }
   } catch(err) {
-    return false;
-  }
-  
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
+  };
+
 };
 
 exports.getItemByID = _getItemByID;
@@ -146,4 +193,3 @@ exports.insertNewItem = _insertNewItem;
 exports.deleteItemByID = _deleteItemByID;
 exports.deleteAllItems = _deleteAllItems;
 exports.getItems = _getItems;
-exports.getItemByTitle = _getItemByTitle;

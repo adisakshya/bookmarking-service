@@ -29,47 +29,35 @@ const _createNewItem = async (req, res) => {
           });
     }
 
-    // Check if item with this Title already exists
-    const item = await dbController.getItemByTitle(title);
-    if(item) {
-        return res
-          .status(200)
-          .json({
-              "success": true,
-              "error": false,
-              "message": "Tag already exists",
-              "data": {
-                "tag": item,
-                "duplicate": "Tag Title"
-              }
-          });
-    } else {
-        // Insert into db
-        const item = await dbController.insertNewItem(title);
-
-        if(item) {
-        return res
-            .status(200)
-            .json({
-                "success": true,
-                "error": false,
-                "message": "New tag entry created",
-                "data": {
-                    "tag": item,
-                }
-            });
-        } else {
-          return res
-              .status(500)
-              .json({
-                  "success": false,
-                  "error": true,
-                  'message': 'Something went wrong',
-                  "data": null
-              });
-          }
+    // Insert into db
+    const { error, data, message } = await dbController.insertNewItem(title);
+    let resp = {
+      "success": !error,
+      "error": error,
+      'message': message,
+      "data": {
+        "tags": data
+      }
     }
-
+    
+    if(!error) {
+      return res
+        .status(200)
+        .json(resp);
+    } else if(error.code === 11000) {
+        return res
+          .status(409)
+          .json({
+              "success": !error,
+              "error": error,
+              'message': 'Tag already exists',
+              "data": data
+          });
+      } else {
+          return res
+            .status(500)
+            .json(resp);
+      }
 };
 
 /**
@@ -80,28 +68,28 @@ const _createNewItem = async (req, res) => {
 const _getAllItems = async (req, res) => {
   
   // Get all tags
-  const items = await dbController.getItems();
+  const { error, data, message } = await dbController.getItems();
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "tags": data
+    }
+  }
 
-  if(items.length) {
+  if(data.length && !error) {
     return res
       .status(200)
-      .json({
-          "success": true,
-          "error": false,
-          'message': "Tags found",
-          "data": {
-            "items": items
-          }
-      });
-  } else {
+      .json(resp);
+  } else if(!data.length && !error){
     return res
       .status(404)
-      .json({
-          "success": false,
-          "error": true,
-          "message": 'No tags found',
-          "data": null
-      });
+      .json(resp);
+  } else {
+    return res
+      .status(500)
+      .json(resp);
   }
 };
 
@@ -128,28 +116,28 @@ const _getByID = async (req, res) => {
   }
 
   // Get item by ID
-  const item = await dbController.getItemByID(id);
-  
-  if(item) {
+  const { error, data, message } = await dbController.getItemByID(id);
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "tags": data
+    }
+  }
+
+  if(!error && data) {
     return res
       .status(200)
-      .json({
-          "success": true,
-          "error": false,
-          'message': "Tag found",
-          "data": {
-            "tag": item
-          }
-      });
+      .json(resp);
+  } else if(!error && !data){
+    return res
+      .status(404)
+      .json(resp);
   } else {
     return res
       .status(404)
-      .json({
-          "success": false,
-          "error": true,
-          "message": "No such tag found",
-          "data": null
-      });
+      .json(resp);
   }
 };
 
@@ -175,45 +163,29 @@ const _deleteByID = async (req, res) => {
       });
   }
 
-  // Get item by ID
-  // To check if item exists
-  const item = await dbController.getItemByID(id);
-  let itemID = item._id;
-
-  if(itemID) {
-    // Delete item
-    const removedItem = await dbController.deleteItemByID(itemID);
-    
-    if(removedItem) {   
-      return res
-        .status(200)
-        .json({
-            "success": true,
-            "error": false,
-            'message': "tag deleted",
-            "data": {
-              "tag": item
-            }
-        });
-    } else {
-        return res
-          .status(404)
-          .json({
-              "success": false,
-              "error": true,
-              "message": "Something went wrong",
-              "data": null
-          });
+  // Delete item
+  const { error, data, message } = await dbController.deleteItemByID(id);
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "tags": data
     }
-  } else {
+  }
+
+  if(!error && data) {   
+    return res
+      .status(200)
+      .json(resp);
+  } else if(!error && !data) {
     return res
       .status(404)
-      .json({
-          "success": false,
-          "error": true,
-          "message": "No such tag found",
-          "data": null
-      });
+      .json(resp);
+  } else {
+    return res
+      .status(500)
+      .json(resp);
   }
 };
 
@@ -225,40 +197,29 @@ const _deleteByID = async (req, res) => {
 const _deleteAll = async (req, res) => {
   
   // Delete all tags
-  const resp = await dbController.deleteAllItems();
-  
-  // Check if no items were present
-  if(!resp.deletedCount) {
-    return res
-      .status(404)
-      .json({
-          "success": false,
-          "error": true,
-          "message": "No tags found",
-          "data": null
-      });
+  const { error, data, message } = await dbController.deleteAllItems();
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "tags": data
+    }
   }
 
-  if(resp) {    
+  // Check if no items were present
+  if(!error && !data.deletedCount) {
+    return res
+      .status(404)
+      .json(resp);
+  } else if(!error && data) {    
     return res
       .status(200)
-      .json({
-          "success": true,
-          "error": false,
-          'message': "Tags deleted",
-          "data": {
-            "tag": resp
-          }
-      });
+      .json(resp);
   } else {
     return res
       .status(500)
-      .json({
-          "success": false,
-          "error": true,
-          "message": "Something went wrong",
-          "data": null
-      });
+      .json(resp);
   }
 };
 
