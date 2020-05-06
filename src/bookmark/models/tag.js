@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const tagsSchema = new mongoose.Schema({
   
   /**
-   * Title of the bookmark
+   * Title of the tag
    */
   title: {
     type: String,
@@ -14,7 +14,7 @@ const tagsSchema = new mongoose.Schema({
   },
 
   /**
-   * Time when bookmark was created (in epoch time)
+   * Time when tag was created
    */
   createdAt: {
     type: Date,
@@ -22,7 +22,7 @@ const tagsSchema = new mongoose.Schema({
   },
 
   /**
-   * Time when bookmark was updated (in epoch time)
+   * Time when tag was updated
    */
   updatedAt: {
     type: Date,

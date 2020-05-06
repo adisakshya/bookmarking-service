@@ -22,7 +22,7 @@ const bookmarksSchema = new mongoose.Schema({
   },
 
   /**
-   * Time when bookmark was created (in epoch time)
+   * Time when bookmark was created
    */
   createdAt: {
     type: Date,
@@ -30,7 +30,7 @@ const bookmarksSchema = new mongoose.Schema({
   },
 
   /**
-   * Time when bookmark was updated (in epoch time)
+   * Time when bookmark was updated
    */
   updatedAt: {
     type: Date,
