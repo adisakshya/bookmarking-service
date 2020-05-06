@@ -26,6 +26,15 @@ function removeItemFromArray(arr, value) {
 }
 
 /**
+ * Utility function
+ * Find item in an array
+ */
+function getItemFromArray(arr, value) { 
+  var index = arr.indexOf(value);
+  return index;
+}
+
+/**
  * CREATE new bookmark
  * @param {object} req 
  * @param {object} res 
@@ -352,7 +361,7 @@ const _addTag = async (req, res) => {
     let tags = item.tags;
 
     // Check if tag already assigned
-    if(!(title in tags)) {
+    if(!(getItemFromArray(tags, title) > -1)) {
       // If not then update tags
       await tags.push(title);
 
@@ -439,7 +448,7 @@ const _removeTag = async (req, res) => {
     let tags = item.tags;
     
     // Check if tag is assigned
-    if(title in tags) {
+    if(getItemFromArray(tags, title) > -1) {
       // If yes, then remove the assigned tag
       tags = removeItemFromArray(tags, title);
     
@@ -473,7 +482,7 @@ const _removeTag = async (req, res) => {
       }
     } else {
         return res
-          .status(500)
+          .status(404)
           .json({
             "success": false,
             "error": true,
