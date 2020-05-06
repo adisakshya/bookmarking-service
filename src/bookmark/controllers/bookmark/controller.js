@@ -66,6 +66,7 @@ const createNewItem = async (req, res) => {
       tags = [];
     } else {
       // create array object
+      tags = tags.split(',')
     }
 
     // Check if valid link
@@ -81,8 +82,8 @@ const createNewItem = async (req, res) => {
     }
 
     // Check if bookmark link already exists
-    const url = await dbController.getItemByLink(link);
-    if(url) {
+    const bookmarklink = await dbController.getItemByLink(link);
+    if(bookmarklink) {
         // Return response
         return res
         .status(200)
@@ -91,7 +92,7 @@ const createNewItem = async (req, res) => {
             "error": false,
             "message": "Bookmark link already exists",
             "data": {
-              "url": url,
+              "link": bookmarklink,
               "duplicate": "Bookmark Link"
             }
         });
@@ -108,7 +109,7 @@ const createNewItem = async (req, res) => {
             "error": false,
             "message": "Title already exists",
             "data": {
-              "url": item,
+              "bookmark": item,
               "duplicate": "Bookmark Title"
             }
         });
@@ -125,7 +126,7 @@ const createNewItem = async (req, res) => {
             "error": false,
             "message": "New bookmark entry created",
             "data": {
-                "url": item,
+                "bookmark": item,
             }
             })
         } else {
@@ -200,7 +201,7 @@ const getByID = async (req, res) => {
         "error": false,
         'message': "Bookmark ID found",
         "data": {
-          "url": item
+          "bookmark": item
         }
       });
   } else {
@@ -248,7 +249,7 @@ const deleteByID = async (req, res) => {
         "error": false,
         'message': "Bookmark deleted",
         "data": {
-          "url": item
+          "bookmark": item
         }
       });
   } else {
@@ -289,7 +290,7 @@ const deleteAll = async (req, res) => {
         "error": false,
         'message': "Bookmarks deleted",
         "data": {
-          "url": resp
+          "bookmark": resp
         }
       });
   } else {
