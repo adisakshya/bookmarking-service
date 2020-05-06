@@ -6,7 +6,7 @@
 /**
  * Load model
  */
-let bookmarks = require('../models/model');
+let bookmarks = require('../models/bookmark');
 
 /**
  * Check if connection with database if established
@@ -39,6 +39,54 @@ const getItemByID = async (id) => {
     return false;
   }
   
+};
+
+/**
+ * GET item by link
+ * @param {String} link 
+ */
+const getItemByLink = async (link) => {
+  
+  try {
+    // GET item
+    const item = await bookmarks.findOne({
+      link: link
+    });
+    
+    // RETURN item
+    if(item) {
+      return item;
+    } else {
+      return false;
+    }
+  } catch(err) {
+    return false;
+  }
+
+};
+
+/**
+ * GET item by title
+ * @param {String} link 
+ */
+const getItemByTitle = async (title) => {
+  
+  try {
+    // GET item
+    const item = await bookmarks.findOne({
+      title: title
+    });
+    
+    // RETURN item
+    if(item) {
+      return item;
+    } else {
+      return false;
+    }
+  } catch(err) {
+    return false;
+  }
+
 };
 
 /**
@@ -143,3 +191,5 @@ exports.insertNewItem = insertNewItem;
 exports.deleteItemByID = deleteItemByID;
 exports.deleteAllItems = deleteAllItems;
 exports.getItems = getItems;
+exports.getItemByLink = getItemByLink;
+exports.getItemByTitle = getItemByTitle;
