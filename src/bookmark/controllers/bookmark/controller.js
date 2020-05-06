@@ -113,11 +113,8 @@ const createNewItem = async (req, res) => {
             }
         });
     } else {
-        // Generate ID
-        let id = uuid()
-        
         // Insert into db
-        const item = await dbController.insertNewItem(id, link, title, publisher, tags);
+        const item = await dbController.insertNewItem(link, title, publisher, tags);
 
         if(item) {
         // Return response
@@ -237,10 +234,10 @@ const deleteByID = async (req, res) => {
 
   // Get url code
   const item = await dbController.getItemByID(id);
-  let itemCode = item.URLCode;
+  let itemID = item._id;
 
   // Delete item
-  const removedItem = await dbController.deleteItemByID(id);
+  const removedItem = await dbController.deleteItemByID(itemID);
   
   if(removedItem) {    
     // Return response

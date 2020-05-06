@@ -6,14 +6,6 @@ const mongoose = require("mongoose");
 const bookmarksSchema = new mongoose.Schema({
   
   /**
-   * Unique id of the bookmark (something like UUID)
-   */
-  id: {
-    type: String,
-    required: true
-  },
-
-  /**
    * Link of the bookmark
    */
   link: {

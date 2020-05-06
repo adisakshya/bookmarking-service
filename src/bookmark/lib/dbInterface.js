@@ -91,18 +91,16 @@ const getItemByTitle = async (title) => {
 
 /**
  * INSERT new item
- * @param {String} id 
  * @param {String} link
  * @param {String} title
  * @param {String} publisher
  * @param {String} tags
  */
-const insertNewItem = async (id, link, title, publisher, tags) => {
+const insertNewItem = async (link, title, publisher, tags) => {
     
   try {
     // Create new item
     const item = new bookmarks({
-        id,
         link,
         title,
         publisher,
