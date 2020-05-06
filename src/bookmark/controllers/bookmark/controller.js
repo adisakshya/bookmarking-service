@@ -89,7 +89,7 @@ const createNewItem = async (req, res) => {
         .json({
             "success": true,
             "error": false,
-            "message": "URL code already exists",
+            "message": "Bookmark link already exists",
             "data": {
               "url": url,
               "duplicate": "Bookmark Link"
