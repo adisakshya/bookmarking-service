@@ -183,6 +183,28 @@ const getItems = async () => {
   
 };
 
+/**
+ * UPDATE item's original URL
+ * @param {String} originalURL 
+ */
+const updateItem = async (id, updatedItem) => {
+  
+  try {
+    // UPDATE item
+    const item = await bookmarks.findByIdAndUpdate(id, updatedItem, {new: true});
+
+    // RETURN item
+    if(item) {
+      return item;
+    } else {
+      return false;
+    }
+  } catch(err) {
+    return false
+  }
+  
+};
+
 exports.checkDB = checkDB;
 exports.getItemByID = getItemByID;
 exports.insertNewItem = insertNewItem;
@@ -191,3 +213,4 @@ exports.deleteAllItems = deleteAllItems;
 exports.getItems = getItems;
 exports.getItemByLink = getItemByLink;
 exports.getItemByTitle = getItemByTitle;
+exports.updateItem = updateItem;

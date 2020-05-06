@@ -40,6 +40,20 @@ router.route('/item')
   .delete(bookmarkController.deleteByID);
 
 /**
+ * Tag Route
+ */
+router.route('/tag/add')
+  /**
+   * Add tag
+   */
+  .post(bookmarkController.addTag)
+  
+  /**
+   * Remove tag
+   */
+  .delete(bookmarkController.removeTag);
+
+/**
  * Database Connection Test Route
  */
 router.route('/db/connection/test')
