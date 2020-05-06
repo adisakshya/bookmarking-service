@@ -1,0 +1,20 @@
+version: '3.7'
+ 
+services:
+    # bookmarker:
+    #     container_name: bookmarker
+    #     build: ./bookmark
+    #     ports:
+    #       - '3000:3000'
+    #     restart: on-failure
+    #     depends_on: 
+    #       - db
+    #     links:
+    #       - db
+    db:
+      image: mongo
+      container_name: database
+      restart: on-failure
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: root
