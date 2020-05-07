@@ -1,0 +1,11 @@
+{
+    "name": "Bookmarker API Documentation",
+    "version": "1.0.0",
+    "description": "This is the documentation for the bookmarker service",
+    "title": "Documentation | Bookmarker API",
+    "url":"http://<domain:port>",
+    "template": {
+        "withCompare": true,
+        "withGenerator": true
+    }
+  }
