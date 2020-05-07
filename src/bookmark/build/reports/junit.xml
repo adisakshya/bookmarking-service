@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="34" failures="0" time="9.443">
+  <testsuite name="tests\endpoint.test.js" errors="0" failures="0" skipped="0" timestamp="2020-05-07T12:02:22" time="6.989" tests="34">
+    <testcase classname="Ping the server-should ping the server" name="Ping the server-should ping the server" time="0.351">
+    </testcase>
+    <testcase classname="Verify connection with database-should check if connection with database is ready" name="Verify connection with database-should check if connection with database is ready" time="0.038">
+    </testcase>
+    <testcase classname="Failing to create a new tag because of insufficient parameter supplied-do not insert due to insufficient parameter: title" name="Failing to create a new tag because of insufficient parameter supplied-do not insert due to insufficient parameter: title" time="0.05">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameter: link" name="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameter: link" time="0.022">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameter: title" name="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameter: title" time="0.023">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameter: publisher" name="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameter: publisher" time="0.024">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameters: link and title" name="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameters: link and title" time="0.029">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameters: title and publisher" name="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameters: title and publisher" time="0.021">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameters: link and publisher" name="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to insufficient parameters: link and publisher" time="0.015">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to no parameters supplied" name="Failing to create a new bookmark because of insufficient parameter supplied-do not insert due to no parameters supplied" time="0.066">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of invalid link parameter supplied-do not insert due to invalid parameter: link" name="Failing to create a new bookmark because of invalid link parameter supplied-do not insert due to invalid parameter: link" time="0.022">
+    </testcase>
+    <testcase classname="Failing to create a new tag because of duplicate parameters-do not insert due to duplicate parameter: title" name="Failing to create a new tag because of duplicate parameters-do not insert due to duplicate parameter: title" time="0.119">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of duplicate parameters-do not insert due to duplicate parameter: link" name="Failing to create a new bookmark because of duplicate parameters-do not insert due to duplicate parameter: link" time="0.067">
+    </testcase>
+    <testcase classname="Failing to create a new bookmark because of duplicate parameters-do not insert due to duplicate parameter: title" name="Failing to create a new bookmark because of duplicate parameters-do not insert due to duplicate parameter: title" time="0.098">
+    </testcase>
+    <testcase classname="Create a new tag-should insert a new tag" name="Create a new tag-should insert a new tag" time="0.03">
+    </testcase>
+    <testcase classname="Create a new bookmark-should insert a new bookmark" name="Create a new bookmark-should insert a new bookmark" time="0.031">
+    </testcase>
+    <testcase classname="Failing to get tag information because insufficient parameter supplied-should not get information due to insufficient parameter: ID" name="Failing to get tag information because insufficient parameter supplied-should not get information due to insufficient parameter: ID" time="0.022">
+    </testcase>
+    <testcase classname="Failing to get bookmark information because insufficient parameter supplied-should not get information due to insufficient parameter: ID" name="Failing to get bookmark information because insufficient parameter supplied-should not get information due to insufficient parameter: ID" time="0.022">
+    </testcase>
+    <testcase classname="Failing to get tag information because invalid parameter supplied-should not get information due to invalid parameter: ID" name="Failing to get tag information because invalid parameter supplied-should not get information due to invalid parameter: ID" time="0.202">
+    </testcase>
+    <testcase classname="Failing to get bookmark information because invalid parameter supplied-should not get information due to invalid parameter: ID" name="Failing to get bookmark information because invalid parameter supplied-should not get information due to invalid parameter: ID" time="0.032">
+    </testcase>
+    <testcase classname="Get tag information-should get information about a tag" name="Get tag information-should get information about a tag" time="0.066">
+    </testcase>
+    <testcase classname="Get bookmark information-should get information about a bookmark" name="Get bookmark information-should get information about a bookmark" time="0.09">
+    </testcase>
+    <testcase classname="Get all tags information-should get information about 2 tags" name="Get all tags information-should get information about 2 tags" time="0.186">
+    </testcase>
+    <testcase classname="Get all bookmarks information-should get information about 2 bookmarks" name="Get all bookmarks information-should get information about 2 bookmarks" time="0.079">
+    </testcase>
+    <testcase classname="Get request on empty tag collection-should return no item found" name="Get request on empty tag collection-should return no item found" time="0.025">
+    </testcase>
+    <testcase classname="Get request on empty bookmark collection-should return no item found" name="Get request on empty bookmark collection-should return no item found" time="0.025">
+    </testcase>
+    <testcase classname="Failing to delete tag because insufficient parameter supplied-should not delete tag due to insufficient parameter: ID" name="Failing to delete tag because insufficient parameter supplied-should not delete tag due to insufficient parameter: ID" time="0.02">
+    </testcase>
+    <testcase classname="Failing to delete bookmark because insufficient parameter supplied-should not delete tag due to insufficient parameter: ID" name="Failing to delete bookmark because insufficient parameter supplied-should not delete tag due to insufficient parameter: ID" time="0.03">
+    </testcase>
+    <testcase classname="Failing to delete tag because invalid parameter supplied-should return item not found" name="Failing to delete tag because invalid parameter supplied-should return item not found" time="0.029">
+    </testcase>
+    <testcase classname="Failing to delete bookmark because invalid parameter supplied-should return item not found" name="Failing to delete bookmark because invalid parameter supplied-should return item not found" time="0.032">
+    </testcase>
+    <testcase classname="Delete all tags-should delete all tags" name="Delete all tags-should delete all tags" time="0.162">
+    </testcase>
+    <testcase classname="Delete all bookmarks-should delete all bookmarks" name="Delete all bookmarks-should delete all bookmarks" time="0.096">
+    </testcase>
+    <testcase classname="Delete request on empty tag collection-should return no tags found" name="Delete request on empty tag collection-should return no tags found" time="0.028">
+    </testcase>
+    <testcase classname="Delete request on empty bookmarks collection-should return no items found" name="Delete request on empty bookmarks collection-should return no items found" time="0.032">
+    </testcase>
+  </testsuite>
+</testsuites>

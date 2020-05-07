@@ -32,6 +32,17 @@
   "devDependencies": {
     "cross-env": "^7.0.2",
     "jest": "^26.0.1",
+    "jest-junit": "^10.0.0",
     "supertest": "^4.0.2"
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "outputDirectory": "./build/reports",
+    "outputName": "junit.xml",
+    "uniqueOutputName": "false",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
   }
 }
