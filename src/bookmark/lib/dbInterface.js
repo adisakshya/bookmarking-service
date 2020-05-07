@@ -19,13 +19,28 @@ const _getItemByID = async (id) => {
     
     // RETURN item
     if(item) {
-      return item;
+      return {
+        error: false,
+        data: item,
+        message: "Bookmark found"
+      };
     } else {
-      return false;
+      return {
+        error: false,
+        data: null,
+        message: "No such bookmark found"
+      };
     }
   } catch(err) {
-    return false;
-  }
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
+  };
   
 };
 
@@ -33,49 +48,64 @@ const _getItemByID = async (id) => {
  * GET item by link
  * @param {String} link 
  */
-const _getItemByLink = async (link) => {
+// const _getItemByLink = async (link) => {
   
-  try {
-    // GET item
-    const item = await bookmarks.findOne({
-      link: link
-    });
+//   try {
+//     // GET item
+//     const item = await bookmarks.findOne({
+//       link: link
+//     });
     
-    // RETURN item
-    if(item) {
-      return item;
-    } else {
-      return false;
-    }
-  } catch(err) {
-    return false;
-  }
+//     // RETURN item
+//     if(item) {
+//       return item;
+//     } else {
+//       return false;
+//     }
+//   } catch(err) {
+//     return false;
+//   }
 
-};
+// };
 
 /**
  * GET item by title
  * @param {String} link 
  */
-const _getItemByTitle = async (title) => {
+// const _getItemByTitle = async (title) => {
   
-  try {
-    // GET item
-    const item = await bookmarks.findOne({
-      title: title
-    });
+//   try {
+//     // GET item
+//     const item = await bookmarks.findOne({
+//       title: title
+//     });
     
-    // RETURN item
-    if(item) {
-      return item;
-    } else {
-      return false;
-    }
-  } catch(err) {
-    return false;
-  }
+//     // RETURN item
+//     if(item) {
+//       return {
+//         error: false,
+//         data: item,
+//         message: "Bookmark found"
+//       };
+//     } else {
+//       return {
+//         error: false,
+//         data: null,
+//         message: "No such bookmark found"
+//       };
+//     }
+//   } catch(err) {
+//     return {
+//       error: {
+//         name: err.name,
+//         code: err.code
+//       },
+//       data: null,
+//       message: "Something went wrong"
+//     };
+//   }
 
-};
+// };
 
 /**
  * INSERT new item
@@ -99,9 +129,20 @@ const _insertNewItem = async (link, title, publisher, tags) => {
     await item.save();
 
     // Return item
-    return item;
+    return {
+      error: false,
+      data: item,
+      message: "New bookmark created"
+    };
   } catch(err) {
-    return false;
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
   }
     
 };
@@ -119,12 +160,27 @@ const _deleteItemByID = async (id) => {
     // Delete and return item
     if(item) {
       let removed_item = await item.remove();
-      return removed_item;
+      return {
+        error: false,
+        data: removed_item,
+        message: "Bookmark deleted"
+      };
     } else {
-      return false;
+      return {
+        error: false,
+        data: null,
+        message: "No such bookmark found"
+      };
     }
   } catch(err) {
-    return false;
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
   }
   
 };
@@ -140,12 +196,27 @@ const _deleteAllItems = async () => {
 
     // Delete and return item
     if(flag) {
-      return flag;
+      return  {
+        error: false,
+        data: flag,
+        message: "Bookmarks deleted"
+      };
     } else {
-      return false;
+      return  {
+        error: false,
+        data: null,
+        message: "No bookmarks found"
+      };
     }
   } catch(err) {
-    return false;
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
   }
   
 };
@@ -158,15 +229,30 @@ const _getItems = async () => {
   try {
     // Get all items
     const items = await bookmarks.find();
-
+    
     // Return items
-    if(items) {
-      return items;
+    if(items && items.length) {
+      return {
+        error: false,
+        data: items,
+        message: "Bookmarks found"
+      };
     } else {
-      return false;
+      return {
+        error: false,
+        data: null,
+        message: "No bookmarks found"
+      };
     }
   } catch(err) {
-    return false;
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
   }
   
 };
@@ -181,15 +267,30 @@ const _updateItem = async (id, updatedItem) => {
     // UPDATE item
     const item = await bookmarks.findByIdAndUpdate(id, updatedItem, {new: true});
 
-    // RETURN item
+    // Return items
     if(item) {
-      return item;
+      return {
+        error: false,
+        data: item,
+        message: "Bookmark updated"
+      };
     } else {
-      return false;
+      return {
+        error: false,
+        data: null,
+        message: "No bookmark found"
+      };
     }
   } catch(err) {
-    return false
-  }
+    return {
+      error: {
+        name: err.name,
+        code: err.code
+      },
+      data: null,
+      message: "Something went wrong"
+    };
+  };
   
 };
 
@@ -198,6 +299,4 @@ exports.insertNewItem = _insertNewItem;
 exports.deleteItemByID = _deleteItemByID;
 exports.deleteAllItems = _deleteAllItems;
 exports.getItems = _getItems;
-exports.getItemByLink = _getItemByLink;
-exports.getItemByTitle = _getItemByTitle;
 exports.updateItem = _updateItem;

@@ -41,7 +41,7 @@ function getItemFromArray(arr, value) {
  */
 const _createNewItem = async (req, res) => {
 
-    // Get link, title, publisher, tags
+    // Get link, title, publisher
     const { link, title, publisher } = req.body;
 
     // Check if all parameters are given
@@ -71,60 +71,37 @@ const _createNewItem = async (req, res) => {
         });
     }
 
-    // Check if bookmark link already exists
-    const bookmarklink = await dbController.getItemByLink(link);
-    if(bookmarklink) {
-      return res
-        .status(200)
-        .json({
-            "success": true,
-            "error": false,
-            "message": "Bookmark link already exists",
-            "data": {
-              "link": bookmarklink,
-              "duplicate": "Link"
-            }
-        });
+    // Insert into db
+    const { error, data, message } = await dbController.insertNewItem(link, title, publisher, tags);
+    let resp = {
+      "success": !error,
+      "error": error,
+      'message': message,
+      "data": {
+        "bookmark": data
+      }
     }
-
-    // Check if item with this title already exists
-    const item = await dbController.getItemByTitle(title);
-    if(item) {
+    
+    if(!error && data) {
+      // Insert successful
+      return res
+        .status(200)
+        .json(resp);
+    } else if(error.code === 11000) {
+      // Duplicate entry
       return res
         .status(200)
         .json({
-            "success": true,
-            "error": false,
-            "message": "Bookmark title already exists",
-            "data": {
-              "bookmark": item,
-              "duplicate": "Title"
-            }
-        });
+              "success": !error,
+              "error": error,
+              'message': 'Bookmark already exists',
+              "data": data
+          });
     } else {
-        // Insert into db
-        const item = await dbController.insertNewItem(link, title, publisher, tags);
-        if(item) {
-          return res
-            .status(200)
-            .json({
-                "success": true,
-                "error": false,
-                "message": "New bookmark entry created",
-                "data": {
-                    "bookmark": item,
-                }
-            });
-        } else {
-          return res
-              .status(500)
-              .json({
-                  "success": false,
-                  "error": true,
-                  'message': 'Something went wrong',
-                  "data": null
-              });
-          }
+      // Other failure
+      return res
+          .status(500)
+          .json(resp);
     }
 };
 
@@ -136,28 +113,31 @@ const _createNewItem = async (req, res) => {
 const _getAllItems = async (req, res) => {
   
   // Get all bookmarks
-  const items = await dbController.getItems();
+  const { error, data, message } = await dbController.getItems();
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "bookmarks": data
+    }
+  }
 
-  if(items.length) {
+  if(!error && data && data.length) {
+    // Bookmarks found
     return res
       .status(200)
-      .json({
-          "success": true,
-          "error": false,
-          'message': "bookmarks found",
-          "data": {
-            "bookmarks": items
-          }
-      });
-  } else {
+      .json(resp);
+  } else if(!error && !data){
+    // No bookmarks found
     return res
       .status(404)
-      .json({
-          "success": false,
-          "error": true,
-          "message": 'No bookmarks found',
-          "data": null
-      });
+      .json(resp);
+  } else {
+    // Other failure
+    return res
+      .status(500)
+      .json(resp);
   }
 };
 
@@ -183,29 +163,32 @@ const _getByID = async (req, res) => {
       });
   }
 
-  // Get item by id
-  const item = await dbController.getItemByID(id);
-  
-  if(item) {
+  // Get item by ID
+  const { error, data, message } = await dbController.getItemByID(id);
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "bookmark": data
+    }
+  }
+
+  if(!error && data) {
+    // Bookmark found
     return res
       .status(200)
-      .json({
-          "success": true,
-          "error": false,
-          'message': "Bookmark found",
-          "data": {
-            "bookmark": item
-          }
-      });
-  } else {
+      .json(resp);
+  } else if(!error && !data){
+    // Bookmark not found
     return res
       .status(404)
-      .json({
-          "success": false,
-          "error": true,
-          "message": "No such bookmark found",
-          "data": null
-      });
+      .json(resp);
+  } else {
+    // Other failure
+    return res
+      .status(500)
+      .json(resp);
   }
 };
 
@@ -231,44 +214,32 @@ const _deleteByID = async (req, res) => {
       });
   }
 
-  // Get item by id
-  // To check if item exists
-  const item = await dbController.getItemByID(id);
-  let itemID = item._id;
-  if(itemID) {
-    // Delete item
-    const removedItem = await dbController.deleteItemByID(itemID);
-    
-    if(removedItem) {   
-      return res
-        .status(200)
-        .json({
-            "success": true,
-            "error": false,
-            'message': "Bookmark deleted",
-            "data": {
-              "bookmark": removedItem
-            }
-        });
-    } else {
-      return res
-        .status(404)
-        .json({
-            "success": false,
-            "error": true,
-            "message": "Something went wrong",
-            "data": null
-        });
+  // Delete item
+  const { error, data, message } = await dbController.deleteItemByID(id);
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "bookmark": data
     }
+  }
+
+  if(!error && data) {  
+    // Bookmark deleted
+    return res
+      .status(200)
+      .json(resp);
+  } else if(!error && !data) {
+    // Bookmark not found
+    return res
+      .status(404)
+      .json(resp);
   } else {
-      return res
-        .status(404)
-        .json({
-            "success": false,
-            "error": true,
-            "message": "No such Bookmark found",
-            "data": null
-        });
+    // Other failure
+    return res
+      .status(500)
+      .json(resp);
   }
 };
 
@@ -279,41 +250,33 @@ const _deleteByID = async (req, res) => {
  */
 const _deleteAll = async (req, res) => {
   
-  // Delete all bookmarks
-  const resp = await dbController.deleteAllItems();
-  
-  // Check if no items were present
-  if(!resp.deletedCount) {
-    return res
-      .status(404)
-      .json({
-        "success": false,
-        "error": true,
-        "message": "No bookmarks found",
-        "data": null
-      });
+  // Delete all tags
+  const { error, data, message } = await dbController.deleteAllItems();
+  let resp = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "bookmarks": data
+    }
   }
 
-  if(resp) {
+  // Check if no items were present
+  if(!error && !data.deletedCount) {
+    // No bookmarks found
+    return res
+      .status(404)
+      .json(resp);
+  } else if(!error && data) {    
+    // All bookmarks deleted
     return res
       .status(200)
-      .json({
-          "success": true,
-          "error": false,
-          'message': "Bookmarks deleted",
-          "data": {
-            "bookmark": resp
-          }
-      });
+      .json(resp);
   } else {
+    // Other failure
     return res
       .status(500)
-      .json({
-          "success": false,
-          "error": true,
-          "message": "Something went wrong",
-          "data": null
-      });
+      .json(resp);
   }
 };
 
@@ -340,80 +303,92 @@ const _addTag = async (req, res) => {
   }
 
   // Check if tag exists
-  const tag = await tagController.getItemByTitle(title);
-  if(!tag) {
+  var { error, data, message } = await tagController.getItemByTitle(title);
+  var resp1 = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "bookmarks": data
+    }
+  }
+  if(!error && !data) {
+    // Tag doesn't exists
     return res
       .status(404)
-      .json({
-          "success": false,
-          "error": true,
-          'message': "Tag not found",
-          "data": null
-      });
+      .json(resp1);
+  } else if(error) {
+    // Other failure
+    return res
+      .status(500)
+      .json(resp1);
   }
 
   // Get item by id
-  const item = await dbController.getItemByID(id);
-  
-  // Return response
-  if(item) {
+  var { error, data, message } = await dbController.getItemByID(id);
+  var resp2 = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "bookmarks": data
+    }
+  }
+
+  if(!error && data) {
     // Get tags
-    let tags = item.tags;
+    let tags = data.tags;
 
     // Check if tag already assigned
     if(!(getItemFromArray(tags, title) > -1)) {
       // If not then update tags
       await tags.push(title);
-
       // Update item
-      const updatedItem = await dbController.updateItem(id, {
+      var { error, data, message } = await dbController.updateItem(id, {
         'tags': tags
       });
-      
-      if(updatedItem) {
+      var resp3 = {
+        "success": !error,
+        "error": error,
+        'message': message,
+        "data": {
+          "bookmarks": data
+        }
+      }
+      if(!error && data) {
+        // Tag assigned
         return res
           .status(200)
-          .json({
-              "success": true,
-              "error": false,
-              'message': "Bookmark updated",
-              "data": {
-                "bookmark": updatedItem
-              }
-          });
+          .json(resp3);
       } else {
+        // Other failure
         return res
           .status(500)
-          .json({
-              "success": false,
-              "error": true,
-              'message': "Something went wrong",
-              "data": {
-                "bookmark": item
-              }
-          });
+          .json(resp3);
       }
     } else {
+        // Tag already assigned
         return res
           .status(200)
           .json({
-            "success": true,
-            "error": false,
+            "success": !error,
+            "error": error,
             'message': "Tag already assigned",
             "data": {
-              "bookmark": item
+              "bookmarks": data
             }
           });
     }
-  } else {
+  } else if(!error && !data) {
+    // Bookmark not found
     return res
       .status(404)
-      .json({
-        "success": false,
-        "error": true,
-        "message": "No such bookmark found",
-        "data": null
-      })
+      .json(resp2)
+  } else {
+    // Other failure
+    return res
+      .status(500)
+      .json(resp2)
   }
 };
 
@@ -439,68 +414,71 @@ const _removeTag = async (req, res) => {
       })
   }
 
-  // Get item by ID
-  // To check if item exists
-  const item = await dbController.getItemByID(id);
-  
-  if(item) {
-    // Get tag
-    let tags = item.tags;
-    
+  // Get item by id
+  var { error, data, message } = await dbController.getItemByID(id);
+  var resp2 = {
+    "success": !error,
+    "error": error,
+    'message': message,
+    "data": {
+      "bookmarks": data
+    }
+  }
+
+  if(!error && data) {
+    // Get tags
+    let tags = data.tags;
+
     // Check if tag is assigned
     if(getItemFromArray(tags, title) > -1) {
       // If yes, then remove the assigned tag
       tags = removeItemFromArray(tags, title);
-    
       // Update item
-      const updatedItem = await dbController.updateItem(id, {
+      var { error, data, message } = await dbController.updateItem(id, {
         'tags': tags
       });
-
-      if(updatedItem) {
+      var resp3 = {
+        "success": !error,
+        "error": error,
+        'message': message,
+        "data": {
+          "bookmarks": data
+        }
+      }
+      if(!error && data) {
+        // Tag removed
+        return res
+          .status(200)
+          .json(resp3);
+      } else {
+        // Other failure
+        return res
+          .status(500)
+          .json(resp3);
+      }
+    } else {
+        // Tag not assigned to this bookmark
         return res
           .status(200)
           .json({
-            "success": true,
-            "error": false,
-            'message': "Bookmark updated",
+            "success": !error,
+            "error": error,
+            'message': "Tag not assigned to this bookmark",
             "data": {
-              "bookmark": item
-            }
-          });
-      } else {
-        return res
-          .status(500)
-          .json({
-            "success": false,
-            "error": true,
-            'message': "Something went wrong",
-            "data": {
-              "bookmark": item
-            }
-          });
-      }
-    } else {
-        return res
-          .status(404)
-          .json({
-            "success": false,
-            "error": true,
-            'message': "This tag is not assigend to this bookmark",
-            "data": {
-              "bookmark": item
+              "bookmarks": data
             }
           });
     }
-  } else {
+  } else if(!error && !data) {
+    // Bookmark not found
     return res
       .status(404)
-      .json({
-        "success": false,
-        "error": true,
-        "message": "No such bookmark found",
-        "data": null
-      })
+      .json(resp2)
+  } else {
+    // Other failure
+    return res
+      .status(500)
+      .json(resp2)
   }
 };
 
