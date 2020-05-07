@@ -35,9 +35,38 @@ function getItemFromArray(arr, value) {
 }
 
 /**
- * CREATE new bookmark
- * @param {object} req 
- * @param {object} res 
+ * @api {post} /api/v1/bookmark create new entry for bookmark
+ * @apiVersion 1.0.0
+ * @apiName create new entry for bookmark
+ * @apiGroup bookmark
+ * @apiPermission all
+ * 
+ * @apiParamExample {String} request-example
+ * 
+ * curl --request POST http://<domain:port>/api/v1/bookmark \
+ *  --data-urlencode 'link=http://localhost' \
+ *  --data-urlencode 'title=someRandomTitle' \
+ *  --data-urlencode 'publisher=someRandomPublisher'
+ * 
+ * @apiParamExample {json} response-example
+ * 
+ * {
+ *      "success": true,
+ *      "error": false,
+ *      "message": "New bookmark created",
+ *      "data": {
+ *        "bookmarks": {
+ *           "tags": [],
+ *           "_id": "5eb3e44ccbd3184b040e08c5",
+ *           "link": "http://localhost",
+ *           "title": "someRandomTitle",
+ *           "publisher": "someRandomPublisher",
+ *           "createdAt": "2020-05-07T10:34:52.490Z",
+ *           "updatedAt": "2020-05-07T10:34:52.490Z",
+ *           "__v": 0
+ *         }
+ *       }
+ * }
  */
 const _createNewItem = async (req, res) => {
 
@@ -106,9 +135,47 @@ const _createNewItem = async (req, res) => {
 };
 
 /**
- * GET all bookmarks
- * @param {object} req 
- * @param {object} res 
+ * @api {get} /api/v1/bookmark get all bookmarks
+ * @apiVersion 1.0.0
+ * @apiName get all bookmarks
+ * @apiGroup bookmark
+ * @apiPermission all
+ * 
+ * @apiParamExample {String} request-example
+ * 
+ * curl --request GET http://<domain:port>/api/v1/bookmark
+ * 
+ * @apiParamExample {json} response-example
+ * 
+ * {
+ *      "success": true,
+ *      "error": false,
+ *      "message": "Bookmarks found",
+ *      "data": {
+ *        "bookmarks": [
+ *             {
+ *                 "tags": [],
+ *                 "_id": "5eb3e44ccbd3184b040e08c5",
+ *                 "link": "http://localhost",
+ *                 "title": "someRandomTitle",
+ *                 "publisher": "someRandomPublisher",
+ *                 "createdAt": "2020-05-07T10:34:52.490Z",
+ *                 "updatedAt": "2020-05-07T10:34:52.490Z",
+ *                 "__v": 0
+ *             },
+ *             {
+ *                 "tags": [],
+ *                 "_id": "5eb3e44ccbd3184b040e08c5",
+ *                 "link": "http://localhosta",
+ *                 "title": "someAnotherRandomTitle",
+ *                 "publisher": "someRandomPublisher",
+ *                 "createdAt": "2020-05-07T10:42:33.490Z",
+ *                 "updatedAt": "2020-05-07T10:42:33.490Z",
+ *                 "__v": 0
+ *             }
+ *         ]
+ *       }
+ * }
  */
 const _getAllItems = async (req, res) => {
   
@@ -142,9 +209,37 @@ const _getAllItems = async (req, res) => {
 };
 
 /**
- * GET bookmark by ID
- * @param {object} req 
- * @param {object} res 
+ * @api {get} /api/v1/tag/bookmark get bookmark details by ID
+ * @apiVersion 1.0.0
+ * @apiName get bookmark details by ID
+ * @apiGroup bookmark
+ * @apiPermission all
+ * 
+ * @apiParam {String} id Bookmark ID
+ * 
+ * @apiParamExample {String} request-example
+ * 
+ * curl --request GET http://<domain:port>/api/v1/bookmark/item?id=BookmarkID
+ * 
+ * @apiParamExample {json} response-example
+ * 
+ * {
+ *      "success": true,
+ *      "error": false,
+ *      "message": "Bookmark found",
+ *      "data": {
+ *        "bookmarks": {
+ *           "tags": [],
+ *           "_id": "5eb3e44ccbd3184b040e08c5",
+ *           "link": "http://localhost",
+ *           "title": "someAnotherRandomTitle",
+ *           "publisher": "someRandomPublisher",
+ *           "createdAt": "2020-05-07T10:34:52.490Z",
+ *           "updatedAt": "2020-05-07T10:34:52.491Z",
+ *           "__v": 0
+ *         }
+ *       }
+ * }
  */
 const _getByID = async (req, res) => {
   
@@ -193,9 +288,38 @@ const _getByID = async (req, res) => {
 };
 
 /**
- * DELETE bookmark by ID
- * @param {object} req 
- * @param {object} res 
+ * @api {delete} /api/v1/bookmark/item delete bookmark by ID
+ * @apiVersion 1.0.0
+ * @apiName delete bookmark
+ * @apiGroup bookmark
+ * @apiPermission all
+ * 
+ * @apiParam {String} id Bookmark ID
+ * 
+ * @apiParamExample {String} request-example
+ * 
+ * curl --request DELETE http://<domain:port>/api/v1/bookmark/item \
+ *  --data-urlencode 'id=5eb3e44ccbd3184b040e08c5'
+ * 
+ * @apiParamExample {json} response-example
+ * 
+ * {
+ *      "success": true,
+ *      "error": false,
+ *      "message": "Bookmark deleted",
+ *      "data": {
+ *        "bookmarks": {
+ *           "tags": [],
+ *           "_id": "5eb3e44ccbd3184b040e08c5",
+ *           "link": "http://localhost",
+ *           "title": "someRandomTitle",
+ *           "publisher": "someRandomPublisher",
+ *           "createdAt": "2020-05-07T10:34:52.490Z",
+ *           "updatedAt": "2020-05-07T10:34:52.491Z",
+ *           "__v": 0
+ *         }
+ *       }
+ * }
  */
 const _deleteByID = async (req, res) => {
   
@@ -244,9 +368,30 @@ const _deleteByID = async (req, res) => {
 };
 
 /**
- * DELETE all bookmarks
- * @param {object} req 
- * @param {object} res 
+ * @api {delete} /api/v1/bookmark delete all bookmarks
+ * @apiVersion 1.0.0
+ * @apiName delete all bookmarks
+ * @apiGroup bookmark
+ * @apiPermission all
+ * 
+ * @apiParamExample {String} request-example
+ * 
+ * curl --request DELETE http://<domain:port>/api/v1/bookmark
+ * 
+ * @apiParamExample {json} response-example
+ * 
+ * {
+ *      "success": true,
+ *      "error": false,
+ *      "message": "Bookmarks deleted",
+ *      "data": {
+  *        "bookmarks": {
+  *           "n": 1,
+  *           "ok": 1,
+  *           "deletedCount": 1
+ *         }
+ *       }
+ * }
  */
 const _deleteAll = async (req, res) => {
   
@@ -281,9 +426,42 @@ const _deleteAll = async (req, res) => {
 };
 
 /**
- * ADD tag to bookmark by ID
- * @param {object} req 
- * @param {object} res 
+ * @api {put} /api/v1/bookmark/tag add tag to bookmark
+ * @apiVersion 1.0.0
+ * @apiName add tag to bookmark
+ * @apiGroup bookmark
+ * @apiPermission all
+ * 
+ * @apiParam {String} id Bookmark ID
+ * @apiParam {String} title Tag Title
+ * 
+ * @apiParamExample {String} request-example
+ * 
+ * curl --request PUT http://<domain:port>/api/v1/bookmark/tag \
+ *  --data-urlencode 'id=6f8b44b749c80311234883b2' \
+ *  --data-urlencode 'title=someRandomTagTitle'
+ * 
+ * @apiParamExample {json} response-example
+ * 
+ * {
+ *      "success": true,
+ *      "error": false,
+ *      "message": "Bookmark updated",
+ *      "data": {
+ *        "bookmarks": {
+ *           "tags": [
+ *             "someRandomTagTitle"
+ *           ],
+ *           "_id": "5eb3ea9fb901e715145808f5",
+ *           "link": "http://localhost",
+ *           "title": "someRandomTitle",
+ *           "publisher": "someRandomPublisher",
+ *           "createdAt": "2020-05-07T11:01:51.675Z",
+ *           "updatedAt": "2020-05-07T11:01:51.676Z",
+ *           "__v": 0
+ *        }
+ *      }
+ * }
  */
 const _addTag = async (req, res) => {
   
@@ -393,9 +571,42 @@ const _addTag = async (req, res) => {
 };
 
 /**
- * REMOVE tag from bookmark by ID
- * @param {object} req 
- * @param {object} res 
+ * @api {put} /api/v1/bookmark/tag remove tag from bookmark
+ * @apiVersion 1.0.0
+ * @apiName remove tag from bookmark
+ * @apiGroup bookmark
+ * @apiPermission all
+ * 
+ * @apiParam {String} id Bookmark ID
+ * @apiParam {String} title Tag Title
+ * 
+ * @apiParamExample {String} request-example
+ * 
+ * curl --request DELETE http://<domain:port>/api/v1/bookmark/tag \
+ *  --data-urlencode 'id=6f8b44b749c80311234883b2' \
+ *  --data-urlencode 'title=someRandomTagTitle'
+ * 
+ * @apiParamExample {json} response-example
+ * 
+ * {
+ *      "success": true,
+ *      "error": false,
+ *      "message": "Bookmark updated",
+ *      "data": {
+ *        "bookmarks": {
+ *           "tags": [
+ *             "someAlreadyExisitingRandomTagTitle"
+ *           ],
+ *           "_id": "5eb3ea9fb901e715145808f5",
+ *           "link": "http://localhost",
+ *           "title": "someRandomTitle",
+ *           "publisher": "someRandomPublisher",
+ *           "createdAt": "2020-05-07T11:01:51.675Z",
+ *           "updatedAt": "2020-05-07T11:01:51.676Z",
+ *           "__v": 0
+ *        }
+ *      }
+ * }
  */
 const _removeTag = async (req, res) => {
   
