@@ -547,7 +547,7 @@ const _addTag = async (req, res) => {
     } else {
         // Tag already assigned
         return res
-          .status(200)
+          .status(403)
           .json({
             "success": !error,
             "error": error,
@@ -670,7 +670,7 @@ const _removeTag = async (req, res) => {
     } else {
         // Tag not assigned to this bookmark
         return res
-          .status(200)
+          .status(404)
           .json({
             "success": !error,
             "error": error,
