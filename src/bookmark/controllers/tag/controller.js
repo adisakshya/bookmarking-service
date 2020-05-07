@@ -78,11 +78,11 @@ const _getAllItems = async (req, res) => {
     }
   }
 
-  if(data.length && !error) {
+  if(!error && data && data.length) {
     return res
       .status(200)
       .json(resp);
-  } else if(!data.length && !error){
+  } else if(!error && !data){
     return res
       .status(404)
       .json(resp);
