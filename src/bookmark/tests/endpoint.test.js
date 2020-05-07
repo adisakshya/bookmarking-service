@@ -305,10 +305,10 @@ describe('Get bookmark information', () => {
         const res = await request(app)
             .get('/api/v1/bookmark/item')
             .query({
-                "id": res1.body.data.bookmark._id
+                "id": res1.body.data.bookmarks._id
             });
         expect(res.statusCode).toEqual(200);
-        expect(res.body.data.bookmark._id).toEqual(res1.body.data.bookmark._id);
+        expect(res.body.data.bookmarks._id).toEqual(res1.body.data.bookmarks._id);
     });
 
 });
