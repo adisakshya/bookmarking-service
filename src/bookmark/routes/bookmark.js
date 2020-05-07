@@ -42,11 +42,11 @@ router.route('/item')
 /**
  * Tag Route
  */
-router.route('/tag/add')
+router.route('/tag')
   /**
    * Add tag to bookmark
    */
-  .post(bookmarkController.addTag)
+  .put(bookmarkController.addTag)
   
   /**
    * Remove tag from bookmark
