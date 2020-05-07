@@ -107,7 +107,7 @@ const _createNewItem = async (req, res) => {
       "error": error,
       'message': message,
       "data": {
-        "bookmark": data
+        "bookmarks": data
       }
     }
     
@@ -265,7 +265,7 @@ const _getByID = async (req, res) => {
     "error": error,
     'message': message,
     "data": {
-      "bookmark": data
+      "bookmarks": data
     }
   }
 
@@ -345,7 +345,7 @@ const _deleteByID = async (req, res) => {
     "error": error,
     'message': message,
     "data": {
-      "bookmark": data
+      "bookmarks": data
     }
   }
 
