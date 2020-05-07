@@ -60,7 +60,6 @@ const _createNewItem = async (req, res) => {
     let tags = [];
 
     // Check if valid link
-    console.log('Valid Link', validURL.isUri(link))
     if(!validURL.isUri(link)) {
       return res
         .status(400)
