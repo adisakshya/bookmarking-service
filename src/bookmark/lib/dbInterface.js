@@ -5,7 +5,7 @@
 /**
  * Load model
  */
-let bookmarks = require('../models/bookmark');
+let { bookmarks } = require('../models/model');
 
 /**
  * GET item by ID
@@ -193,9 +193,9 @@ const _deleteAllItems = async () => {
   try {
     // Get item by ID
     const flag = await bookmarks.deleteMany({});
-
+    
     // Delete and return item
-    if(flag) {
+    if(flag && flag.deletedCount > 0) {
       return  {
         error: false,
         data: flag,

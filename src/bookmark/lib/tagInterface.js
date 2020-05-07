@@ -5,7 +5,7 @@
 /**
  * Load model
  */
-let tags = require('../models/tag');
+let { tags } = require('../models/model');
 
 /**
  * GET all item 
@@ -201,7 +201,7 @@ const _deleteAllItems = async () => {
     const flag = await tags.deleteMany({});
 
     // Delete and return item
-    if(flag) {
+    if(flag && flag.deletedCount > 0) {
       return  {
         error: false,
         data: flag,
