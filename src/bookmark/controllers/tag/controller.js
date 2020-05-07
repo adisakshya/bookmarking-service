@@ -136,7 +136,7 @@ const _getByID = async (req, res) => {
       .json(resp);
   } else {
     return res
-      .status(404)
+      .status(500)
       .json(resp);
   }
 };
@@ -208,11 +208,11 @@ const _deleteAll = async (req, res) => {
   }
 
   // Check if no items were present
-  if(!error && !data.deletedCount) {
+  if(!error && !data) {
     return res
       .status(404)
       .json(resp);
-  } else if(!error && data) {    
+  } else if(!error && data && data.deletedCount > 0) {    
     return res
       .status(200)
       .json(resp);

@@ -60,6 +60,7 @@ const _createNewItem = async (req, res) => {
     let tags = [];
 
     // Check if valid link
+    console.log('Valid Link', validURL.isUri(link))
     if(!validURL.isUri(link)) {
       return res
         .status(400)
@@ -90,7 +91,7 @@ const _createNewItem = async (req, res) => {
     } else if(error.code === 11000) {
       // Duplicate entry
       return res
-        .status(200)
+        .status(409)
         .json({
               "success": !error,
               "error": error,
@@ -262,12 +263,12 @@ const _deleteAll = async (req, res) => {
   }
 
   // Check if no items were present
-  if(!error && !data.deletedCount) {
+  if(!error && !data) {
     // No bookmarks found
     return res
       .status(404)
       .json(resp);
-  } else if(!error && data) {    
+  } else if(!error && data && data.deletedCount > 0) {    
     // All bookmarks deleted
     return res
       .status(200)
